@@ -3,10 +3,12 @@ import { credentials } from "lib/constants";
 import Twit from "twit";
 import https from "https";
 
+function wait(ms) {
+  return new Promise((resolve, reject) => setTimeout(resolve, ms));
+}
+
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   console.log("STARTING @", Date.now().toString());
-  res.send("ACK");
-  res.end();
   const T = new Twit({
     consumer_key: credentials.twitter.apiKey,
     consumer_secret: credentials.twitter.apiSecret,
@@ -33,13 +35,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       );
   });
   stream.on("error", (err) => console.error(err));
-  setTimeout(() => {
-    stream.stop();
-    console.log("ENDING @", Date.now().toString());
-    console.log("pong-ing");
-    https.get("https://newsweek-bot.vercel.app/api/pong");
-    console.log("pong done");
-  }, 5000);
+  await wait(5000);
+  stream.stop();
+  console.log("ENDING @", Date.now().toString());
+  res.send("ACK");
+  res.end();
+  //   console.log("pong-ing");
+  //   https.get("https://newsweek-bot.vercel.app/api/pong");
+  //   console.log("pong done");
 };
 
 // function respondToTweet(id) {
