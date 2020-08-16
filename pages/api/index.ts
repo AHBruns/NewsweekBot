@@ -8,8 +8,6 @@ function wait(ms) {
 }
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  res.send("ACK");
-  res.end();
   console.log("STARTING @", Date.now().toString());
   const T = new Twit({
     consumer_key: credentials.twitter.apiKey,
@@ -37,9 +35,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       );
   });
   stream.on("error", (err) => console.error(err));
-  await wait(10000);
+  await wait(5000);
   stream.stop();
   console.log("ENDING @", Date.now().toString());
+  res.send("ACK");
+  res.end();
   //   console.log("pong-ing");
   //   https.get("https://newsweek-bot.vercel.app/api/pong");
   //   console.log("pong done");
