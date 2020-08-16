@@ -5,7 +5,6 @@ import https from "https";
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
   res.send("ACK");
-
   const T = new Twit({
     consumer_key: credentials.twitter.apiKey,
     consumer_secret: credentials.twitter.apiSecret,
@@ -19,7 +18,9 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
   setTimeout(() => {
     stream.stop();
     console.log("stream stopped");
+    console.log("pong-ing");
     https.get("https://newsweek-bot.vercel.app/api/pong");
+    console.log("pong done");
   }, 7500);
   stream.on("tweet", function (tweet) {
     console.log(tweet);
@@ -36,6 +37,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
         }
       );
   });
+  stream.on("error", (err) => console.error(err));
 };
 
 // function respondToTweet(id) {
