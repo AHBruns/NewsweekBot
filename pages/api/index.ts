@@ -3,7 +3,8 @@ import { credentials } from "lib/constants";
 import Twit from "twit";
 import https from "https";
 
-export default (req: NextApiRequest, res: NextApiResponse) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
+  console.log("STARTING @", Date.now().toString());
   res.send("ACK");
   res.end();
   const T = new Twit({
@@ -34,7 +35,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
   stream.on("error", (err) => console.error(err));
   setTimeout(() => {
     stream.stop();
-    console.log("stream stopped");
+    console.log("ENDING @", Date.now().toString());
     console.log("pong-ing");
     https.get("https://newsweek-bot.vercel.app/api/pong");
     console.log("pong done");
