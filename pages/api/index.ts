@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { credentials } from "lib/constants";
 import Twit from "twit";
+import https from "https";
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
   res.send("ACK");
@@ -18,6 +19,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
   setTimeout(() => {
     stream.stop();
     console.log("stream stopped");
+    https.get("https://newsweek-bot.vercel.app/api/pong");
   }, 7500);
   stream.on("tweet", function (tweet) {
     console.log(tweet);
