@@ -5,6 +5,7 @@ import https from "https";
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
   res.send("ACK");
+  res.end();
   const T = new Twit({
     consumer_key: credentials.twitter.apiKey,
     consumer_secret: credentials.twitter.apiSecret,
@@ -15,13 +16,6 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   const stream = T.stream("statuses/filter", { track: ["newsweek"] });
-  setTimeout(() => {
-    stream.stop();
-    console.log("stream stopped");
-    console.log("pong-ing");
-    https.get("https://newsweek-bot.vercel.app/api/pong");
-    console.log("pong done");
-  }, 7500);
   stream.on("tweet", function (tweet) {
     console.log(tweet);
     if (tweet.user.screen_name != "NewsweekBot")
@@ -38,6 +32,13 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       );
   });
   stream.on("error", (err) => console.error(err));
+  setTimeout(() => {
+    stream.stop();
+    console.log("stream stopped");
+    console.log("pong-ing");
+    https.get("https://newsweek-bot.vercel.app/api/pong");
+    console.log("pong done");
+  }, 5000);
 };
 
 // function respondToTweet(id) {
